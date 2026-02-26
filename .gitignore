@@ -1,0 +1,3 @@
+# Fichiers sensibles
+composer.lock
+/vendor/
