@@ -6,12 +6,18 @@
 
 ``` pgsql
 mon-mvc/
+├─ config/
+│ └─ bootstrap.php
 ├─ public/
 │ └─ index.php
 ├─ src/
 │ ├─ Core/
 │ └─ Controllers/
-└─ Views/
+├─ Views/
+├─ .env
+├─ .env.local
+├─ .gitignore
+└─ vendor/
 ```
 
 ------------------------------------------------------------------------
