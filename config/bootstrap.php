@@ -88,3 +88,25 @@ date_default_timezone_set('Europe/Paris');
 ini_set('session.cookie_httponly', '1');
 ini_set('session.cookie_secure', (!empty($_SERVER['HTTPS']) ? '1' : '0'));
 ini_set('session.use_strict_mode', '1');
+
+// Démarrage sécurisé session
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    // Paramètres sécurité cookie (avant session_start)
+    session_set_cookie_params([
+        'lifetime' => 0, // session cookie
+        'path' => '/',
+        'domain' => '',
+        'secure' => (!empty($_SERVER['HTTPS'])), // true en HTTPS
+        'httponly' => true, // JS ne peut pas lire le cookie
+        'samesite' => 'Lax', // protège contre CSRF basique
+    ]);
+    session_start();
+}
+
+/**
+ * Protection contre la session fixation
+ */
+if (!isset($_SESSION['_initiated'])) {
+    session_regenerate_id(true);
+    $_SESSION['_initiated'] = true;
+}
