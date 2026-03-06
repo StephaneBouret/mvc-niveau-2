@@ -77,6 +77,11 @@ define('DB_DSN', sprintf(
 ));
 
 /**
+* Constante sur la vue
+*/
+define('VIEW_PATH', APP_ROOT . '/Views'); // ou /templates
+
+/**
  * Contexte applicatif
  */
 mb_internal_encoding('UTF-8');

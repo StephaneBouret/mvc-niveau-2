@@ -43,21 +43,32 @@ abstract class Controller
         }
     }
 
+    /**
+     * Ajoute un message flash.
+     * Types recommandés : success, info, warning, error
+     */
     protected function setFlash(string $type, string $message): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        $_SESSION['_flashes'][$type][] = $message;
+        $_SESSION['_flash'][] = [
+            'type' => $type,
+            'msg' => $message,
+        ];
     }
 
-    protected function getFlashes(): array
+    /**
+     * Récupère puis supprime les messages flash.
+     * (Optionnel si tu relies uniquement sur le partial)
+     */
+    protected function getFlash(): array
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        $flashes = $_SESSION['_flashes'] ?? [];
-        unset($_SESSION['_flashes']);
+        $flashes = $_SESSION['_flash'] ?? [];
+        unset($_SESSION['_flash']);
         return $flashes;
     }
 
