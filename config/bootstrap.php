@@ -9,6 +9,8 @@ use Dotenv\Dotenv;
  */
 define('APP_ROOT', dirname(__DIR__));
 define('PUBLIC_PATH', APP_ROOT . '/public');
+define('CREATIONS_UPLOAD_DIR', PUBLIC_PATH . '/assets/img/creations');
+define('CREATIONS_PUBLIC_PREFIX', '/assets/img/creations');
 
 /**
  * 1) Autoload Composer (PSR-4 + dépendances)
