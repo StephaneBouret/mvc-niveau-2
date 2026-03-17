@@ -96,11 +96,16 @@ abstract class Controller
         }
         return $_SESSION['user'] ?? null;
     }
-    
+
     protected function requireRole(string $role, string $redirectTo = '/login'): void
     {
         if (!$this->isGranted($role)) {
             $this->redirect($redirectTo);
         }
+    }
+
+    protected function old(array $old, string $key, string $default = ''): string
+    {
+        return htmlspecialchars((string)($old[$key] ?? $default), ENT_QUOTES, 'UTF-8');
     }
 }
