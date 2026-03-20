@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-$title = 'Page introuvable';
+$title = 'Accès interdit';
 ?>
 <!doctype html>
 <html lang="fr">
@@ -21,18 +21,18 @@ $title = 'Page introuvable';
                 <div class="card shadow-sm">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="fs-2 text-warning">
-                                <i class="bi bi-search"></i>
+                            <div class="fs-2 text-danger">
+                                <i class="bi bi-shield-lock-fill"></i>
                             </div>
                             <div>
-                                <h1 class="h4 mb-1">Page introuvable (404)</h1>
-                                <p class="text-muted mb-0">La ressource demandée n'existe pas ou n'est plus disponible.</p>
+                                <h1 class="h4 mb-1">Accès interdit (403)</h1>
+                                <p class="text-muted mb-0">Vous n'avez pas les droits nécessaires pour accéder à cette ressource.</p>
                             </div>
                         </div>
-                        <div class="alert alert-warning mb-3" role="alert">
-                            La page que vous recherchez est introuvable.
+                        <div class="alert alert-danger mb-3" role="alert">
+                            Accès refusé. Vous n'êtes pas autorisé à consulter cette page.
                         </div>
-                        <?php if (defined('APP_DEBUG') && APP_DEBUG && isset($errorMessage)): ?>
+                        <?php if (defined('APP_DEBUG') && APP_DEBUG && isset($errorMessage) && $errorMessage !== ''): ?>
                             <div class="alert alert-secondary mb-3" role="alert">
                                 <strong>Détail :</strong>
                                 <?= htmlspecialchars($errorMessage) ?>

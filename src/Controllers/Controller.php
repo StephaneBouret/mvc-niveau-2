@@ -5,9 +5,20 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Csrf;
+use App\Service\AuthService;
 
 abstract class Controller
 {
+    protected ?AuthService $auth = null;
+
+    private function auth(): AuthService
+    {
+        if ($this->auth === null) {
+            $this->auth = new AuthService();
+        }
+        return $this->auth;
+    }
+
     protected function render(string $view, array $params = [], string $layout = 'layout/base'): void
     {
         extract($params, EXTR_OVERWRITE);
@@ -84,23 +95,45 @@ abstract class Controller
         }
     }
 
-    protected function isGranted(string $role): bool
-    {
-        return isset($_SESSION['user']) && ($_SESSION['user']['role'] ?? null) === $role;
-    }
-
     protected function getUser(): ?array
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        return $_SESSION['user'] ?? null;
+        return $this->auth()->user();
     }
 
-    protected function requireRole(string $role, string $redirectTo = '/login'): void
+    protected function isAuthenticated(): bool
     {
-        if (!$this->isGranted($role)) {
-            $this->redirect($redirectTo);
+        return $this->auth()->check();
+    }
+
+    protected function requireGuest(): void
+    {
+        if ($this->isAuthenticated()) {
+            $this->redirect('/');
+        }
+    }
+
+    protected function redirectIfAuthenticated(string $to = '/'): void
+    {
+        if ($this->isAuthenticated()) {
+            $this->redirect($to);
+        }
+    }
+    
+    protected function denyAccess(string $message = 'Accès interdit'): void
+    {
+        $this->abort(403, $message);
+    }
+
+    protected function requireRole(string $role): void
+    {
+        if (!$this->auth()->check()) {
+            $this->redirect('/login');
+        }
+
+        if (!$this->auth()->isGranted($role)) {
+            http_response_code(403);
+            echo 'Accès interdit';
+            exit;
         }
     }
 
