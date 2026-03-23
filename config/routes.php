@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\AuthController;
 use App\Controllers\CreationController;
 use App\Controllers\HomeController;
+use App\Controllers\PasswordResetController;
 
 return [
     // Home
@@ -16,6 +17,12 @@ return [
     ['GET', '/login', [AuthController::class, 'login']],
     ['POST', '/login', [AuthController::class, 'login']],
     ['POST', '/logout', [AuthController::class, 'logout'], '@AUTH'],
+
+    // ResetPassword
+    ['GET',  '/forgot-password',           [PasswordResetController::class, 'forgotPassword']],
+    ['POST', '/forgot-password',           [PasswordResetController::class, 'forgotPassword']],
+    ['GET',  '/reset-password',            [PasswordResetController::class, 'resetPassword']],
+    ['POST', '/reset-password',            [PasswordResetController::class, 'resetPassword']],
 
     // Créations (CRUD)
     ['GET', '/creations', [CreationController::class, 'index']],
