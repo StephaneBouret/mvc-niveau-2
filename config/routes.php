@@ -37,7 +37,10 @@ return [
     ['POST', '/admin/users/{id}/reset-password', [AdminUserController::class, 'sendResetLink'], 'ROLE_ADMIN'],
 
     // Creations
-    ['GET', '/creations', [CreationController::class, 'index']],   
+    ['GET', '/creations', [CreationController::class, 'index']],  
+    // Recherche JSON pour autocomplétion
+    ['GET',  '/api/creations/search',      [CreationController::class, 'search']],
+    
     ['GET', '/creations/new', [CreationController::class, 'create'], 'ROLE_ADMIN'],
     ['POST', '/creations/new', [CreationController::class, 'create'], 'ROLE_ADMIN'],
     ['GET', '/creations/{id}', [CreationController::class, 'showById']],
