@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Entity;
+use App\Security\Roles;
 
 class User extends Entity
 {
@@ -17,7 +18,9 @@ class User extends Entity
     private ?string $postalCode = null;
     private ?string $city = null;
     private ?string $phone = null;
-    private string $role = 'ROLE_USER';
+
+    private string $role = Roles::USER;
+
     private ?\DateTimeImmutable $createdAt = null;
     private ?\DateTimeImmutable $lastLoginAt = null;
     private ?string $rememberTokenHash = null;
@@ -143,8 +146,20 @@ class User extends Entity
     public function setRole(string $role): self
     {
         $role = strtoupper(trim($role));
-        $this->role = in_array($role, ['ROLE_ADMIN', 'ROLE_USER'], true) ? $role : 'ROLE_USER';
+
+        $this->role = Roles::isValid($role)
+            ? $role
+            : Roles::USER;
+
         return $this;
+    }
+
+    /**
+     * Bonus : vérification avec hiérarchie
+     */
+    public function hasRole(string $role): bool
+    {
+        return Roles::can($this->role, $role);
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

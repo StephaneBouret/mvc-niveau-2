@@ -37,6 +37,7 @@ final class CreationController extends Controller
             'creations' => $creations,
             'page' => $page,
             'pages' => $pages,
+            'isAdmin' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 
@@ -81,6 +82,7 @@ final class CreationController extends Controller
         $this->render('creation/show', [
             'pageTitle' => 'Détail',
             'creation' => $creation,
+            'isAdmin' => $this->isGranted('ROLE_ADMIN'),
         ]);
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Entities\User;
+use App\Models\LoginAttemptModel;
 use App\Models\UserModel;
 use App\Service\AuthService;
 use App\Service\FormValidator;
@@ -16,12 +17,14 @@ final class AuthController extends Controller
     private UserModel $model;
     private PasswordService $passwordService;
     private AuthService $authService;
+    private LoginAttemptModel $attemptModel;
 
     public function __construct()
     {
         $this->model = new UserModel();
         $this->passwordService = new PasswordService();
         $this->authService = new AuthService();
+        $this->attemptModel = new LoginAttemptModel();
     }
 
     public function register(): void
@@ -88,7 +91,7 @@ final class AuthController extends Controller
         $user->setId($userId);
 
         $this->authService->login($user);
-        
+
         $redirectTo = $this->authService->pullTargetUrl('/');
         $this->setFlash('success', 'Compte créé, bienvenue ✅');
         $this->redirect($redirectTo);
@@ -123,12 +126,30 @@ final class AuthController extends Controller
             return;
         }
 
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        // 🚨 Vérification du nombre de tentatives
+        $attempts = $this->attemptModel->countRecentAttempts($form['email'], $ip);
+
+        if ($attempts >= 5) {
+            $this->render('auth/login', [
+                'pageTitle' => 'Connexion',
+                'errors' => [
+                    'auth' => 'Trop de tentatives. Réessayez dans 15 minutes.'
+                ],
+                'old' => $form['old'],
+            ]);
+            return;
+        }
+
         $user = $this->model->findByEmail($form['email']);
 
         if (
             $user === null ||
             !$this->passwordService->verify($form['password'], $user->getPasswordHash())
         ) {
+            // ❌ On enregistre la tentative échouée
+            $this->attemptModel->recordFailedAttempt($form['email'], $ip);
+
             $this->render('auth/login', [
                 'pageTitle' => 'Connexion',
                 'errors' => ['auth' => 'Email ou mot de passe incorrect.'],
@@ -136,6 +157,9 @@ final class AuthController extends Controller
             ]);
             return;
         }
+
+        // ✅ Succès → reset des tentatives
+        $this->attemptModel->clearAttempts($form['email']);
 
         if ($this->passwordService->needsRehash($user->getPasswordHash())) {
             $newHash = $this->passwordService->hash($form['password']);

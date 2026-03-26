@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entities\User;
 use App\Models\UserModel;
+use App\Security\Roles;
 
 final class AuthService
 {
@@ -55,7 +56,7 @@ final class AuthService
             return false;
         }
 
-        return $currentRole === $role;
+        return Roles::can($currentRole, $role);
     }
 
     public function rememberTargetUrl(string $url): void

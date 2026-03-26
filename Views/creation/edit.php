@@ -13,16 +13,6 @@ $submitLabel = 'Enregistrer';
 $cancelUrl = '/creations/' . $id;
 ?>
 
-<?php if (!empty($old['picture'])): ?>
-    <div class="mb-3">
-        <div class="text-muted mb-2">Image actuelle :</div>
-        <img class="img-fluid rounded border"
-            style="max-height: 240px;"
-            src="<?= htmlspecialchars(CREATIONS_PUBLIC_PREFIX . '/' . $old['picture']) ?>"
-            alt="">
-    </div>
-<?php endif; ?>
-
 <?php
 require VIEW_PATH . '/creation/_form.php';
 ?>

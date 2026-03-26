@@ -118,6 +118,11 @@ abstract class Controller
         return $this->auth()->check();
     }
 
+    protected function isGranted(string $role): bool
+    {
+        return $this->auth()->isGranted($role);
+    }
+
     protected function requireGuest(): void
     {
         if ($this->isAuthenticated()) {
@@ -131,7 +136,7 @@ abstract class Controller
             $this->redirect($to);
         }
     }
-    
+
     protected function denyAccess(string $message = 'Accès interdit'): void
     {
         $this->abort(403, $message);
@@ -153,5 +158,15 @@ abstract class Controller
     protected function old(array $old, string $key, string $default = ''): string
     {
         return htmlspecialchars((string)($old[$key] ?? $default), ENT_QUOTES, 'UTF-8');
+    }
+
+    protected function isGrantedAny(array $roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->isGranted($role)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
