@@ -37,11 +37,21 @@ composer install
 
 Etape 3 **Configurer le fichier `.env`**
 
-Etape 4 **Lancer le serveur**
+Etape 4 **Charger le fichier SQL** [Fichier sql](sql\coursportfolio.sql)
+
+Etape 5 **Lancer le serveur**
 
 ``` Bash
 php -S localhost:8000 -t public
 ```
+
+## 🧪 Comptes de test
+
+### 🧑‍💼 Administrateur
+
+| Email                                     | Mot de passe |
+| ----------------------------------------- | ------------ |
+| [admin@site.fr](mailto:admin@site.fr)     | admin123     |
 
 ## 🔐 Sécurité
 
